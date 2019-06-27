@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Spring Boot API - webapp::pr1
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  Pr1Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: webapp.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: target/pr1-1.0-SNAPSHOT.jar
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 30
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  Pr1Api:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ping'
+    Export:
+      Name: Pr1Api
